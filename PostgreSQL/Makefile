@@ -1,5 +1,7 @@
 #!/bin/bash
 
+GET_DOCKER_ID_COMMAND=$(shell docker ps -aqf "name=postgresql_db_1")
+
 .PHONY: start
 start:
 	@docker-compose -f docker-compose.yml up
@@ -10,8 +12,10 @@ stop:
 
 .PHONY: bash
 bash:
-	@docker-compose -f docker-compose.yml run db bash
+	$(eval DOCKER_ID=$(GET_DOCKER_ID_COMMAND))
+	@docker exec -it $(DOCKER_ID) bash
 
 .PHONY: connect-db
 connect-db:
-	@docker-compose -f docker-compose.yml run db psql -u
+	$(eval DOCKER_ID=$(GET_DOCKER_ID_COMMAND))
+	@docker exec -it $(DOCKER_ID) psql -U postgres postgres
