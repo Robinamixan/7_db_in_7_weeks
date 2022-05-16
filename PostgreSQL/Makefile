@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Run sql file
+# 7dbs=# \i create-structure.sql
+
 GET_DOCKER_ID_COMMAND=$(shell docker ps -aqf "name=postgresql_db_1")
 
 .PHONY: start
