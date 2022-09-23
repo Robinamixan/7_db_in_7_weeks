@@ -1,0 +1,25 @@
+# add compression and bloom filter
+alter 'wiki', {NAME=>'text', COMPRESSION=>'GZ', BLOOMFILTER=>'ROW'}
+
+# get info about regions
+scan 'hbase:meta', { COLUMNS => ['info:server', 'info:regioninfo'] }
+
+# get metadata
+describe 'wiki'
+describe 'hbase:meta'
+
+# create new table
+create 'links', {
+    NAME => 'to', VERSIONS => 1, BLOOMFILTER => 'ROWCOL'
+},{
+    NAME => 'from', VERSIONS => 1, BLOOMFILTER => 'ROWCOL'
+}
+
+# scan table rows
+scan 'links', STARTROW => "Admiral Ackbar", ENDROW => "It's a Trap!"
+
+# get table row
+get 'links', 'Addition'
+
+# count table rows
+count 'wiki', INTERVAL => 100000, CACHE => 10000
